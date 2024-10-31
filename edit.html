@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Image</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: row;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            width: 80%;
+        }
+        .edit-options, .color-info {
+            margin: 20px;
+        }
+        .color-info {
+            font-size: 18px;
+            font-weight: bold;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="edit-options">
+            <h1>Edit Your Image</h1>
+            <img id="uploaded-img" src="/static/uploads/{{ filename }}" alt="Uploaded Image">
+            
+            <h2>Apply Edits</h2>
+            <form action="" method="post">
+                <button name="action" value="grayscale">Grayscale</button>
+                <br>
+                <label>Rotate:</label>
+                <input type="number" name="angle" placeholder="Angle">
+                <button name="action" value="rotate">Rotate</button>
+                <br>
+                <label>Resize:</label>
+                <input type="number" name="width" placeholder="Width">
+                <input type="number" name="height" placeholder="Height">
+                <button name="action" value="resize">Resize</button>
+                <br>
+                <label>Crop:</label>
+                <input type="number" name="x" placeholder="x">
+                <input type="number" name="y" placeholder="y">
+                <input type="number" name="width" placeholder="Width">
+                <input type="number" name="height" placeholder="Height">
+                <button name="action" value="crop">Crop</button>
+                <br>
+                <label>Blur:</label>
+                <input type="number" name="ksize" placeholder="Kernel Size">
+                <button name="action" value="blur">Blur</button>
+                <br>
+                <button name="action" value="edge">Edge Detection</button>
+            </form>
+            
+            <h2>Edited Image</h2>
+            <img id="edited-img" src="/static/edited/{{ edited_filename }}" alt="Edited Image">
+            <a href="/download/{{ edited_filename }}">Download Edited Image</a>
+        </div>
+
+        <!-- Color Info Section -->
+        <div class="color-info" id="color-info">Hover over the image to see RGB values in bold.</div>
+    </div>
+
+    <script>
+        const uploadedImg = document.getElementById('uploaded-img');
+        const colorInfo = document.getElementById('color-info');
+
+        uploadedImg.addEventListener('mousemove', function(event) {
+            // Create a canvas to extract pixel data
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = uploadedImg.width;
+            canvas.height = uploadedImg.height;
+
+            // Draw the image on the canvas
+            ctx.drawImage(uploadedImg, 0, 0, uploadedImg.width, uploadedImg.height);
+
+            // Get the color data at the cursor position
+            const rect = uploadedImg.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const pixelData = ctx.getImageData(x, y, 1, 1).data;
+            const [r, g, b] = pixelData;
+
+            // Display RGB values in bold
+            colorInfo.innerHTML = `R: <b>${r}</b>, G: <b>${g}</b>, B: <b>${b}</b>`;
+        });
+    </script>
+</body>
+</html>
