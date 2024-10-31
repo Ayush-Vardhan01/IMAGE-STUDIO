@@ -1,4 +1,4 @@
-Image Studio
+                                             Image Studio :
 Image Studio is a web-based image editing application built with Flask and OpenCV. Users can upload images and apply various edits such as grayscale conversion, rotation, resizing, cropping, blurring, and edge detection.
 
 image-studio/
